@@ -24,9 +24,15 @@ function Chat({ socket, username, room }) {
   };
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
+    const handleReceiveMessage = (data) => {
       setMessageList((list) => [...list, data]);
-    });
+    };
+  
+    socket.on("receive_message", handleReceiveMessage);
+  
+    return () => {
+      socket.off("receive_message", handleReceiveMessage);
+    };
   }, [socket]);
 
   return (
